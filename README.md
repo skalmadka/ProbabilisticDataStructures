@@ -5,7 +5,7 @@ The goal is to make probabilistic data structures easy to use, rely on the basic
 
 Redis backing helps in implementing the data structures over parallel/distributed environments. 
 
-Through testing and evaluation are immideate goals.
+Through testing and evaluation are immediate goals.
 
 #### Currently Supported Data Structures
 - Bloom Filter

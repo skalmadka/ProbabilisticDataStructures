@@ -1,9 +1,8 @@
-import skalmadka.bloomfilter.BitSetBloomFilter;
-import skalmadka.bloomfilter.BloomFilter;
-import skalmadka.bloomfilter.RedisBloomFilter;
+import skalmadka.bloomFilter.BloomFilter;
+import skalmadka.bloomFilter.RedisBloomFilter;
 
 /**
- * Created by sunil on 3/3/15.
+ * Created by Sunil Kalmadka
  */
 public class BloomFilterTest {
     public static void main(String[] args) {

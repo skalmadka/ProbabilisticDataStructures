@@ -1,4 +1,4 @@
-package skalmadka.bloomfilter;
+package skalmadka.bloomFilter;
 
 /**
  * Created by Sunil Kalmadka

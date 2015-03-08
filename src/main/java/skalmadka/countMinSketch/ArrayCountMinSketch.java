@@ -6,9 +6,9 @@ import skalmadka.hash.MurmurHash;
  * Created by Sunil Kalmadka
  */
 public class ArrayCountMinSketch<T> implements CountMinSketch<T> {
-    final int w;
-    final int d;
-    int[][] countSketch;
+    protected final int w;
+    protected final int d;
+    protected int[][] countSketch;
 
     public ArrayCountMinSketch(final int width,final int hashCount){
         this.w = width;
@@ -27,7 +27,9 @@ public class ArrayCountMinSketch<T> implements CountMinSketch<T> {
     }
 
     @Override
-    public void updateCount(final T obj, final int count) {
+    public int updateCount(final T obj, final int count) {
+        int updatedFrequency = Integer.MAX_VALUE;
+
         final byte[] bytes = obj.toString().getBytes();
         final int hash1 = MurmurHash.hash32(bytes, bytes.length, 0);
         final int hash2 = MurmurHash.hash32(bytes, bytes.length, hash1);
@@ -36,7 +38,13 @@ public class ArrayCountMinSketch<T> implements CountMinSketch<T> {
         for(int i=0;i<d;i++){
             hashBit = Math.abs((hash1 + i*hash2)%d);
             countSketch[i][hashBit] += count;
+
+            if(updatedFrequency > countSketch[i][hashBit]){
+                updatedFrequency = countSketch[i][hashBit];
+            }
         }
+
+        return updatedFrequency;
     }
 
     @Override
@@ -58,7 +66,7 @@ public class ArrayCountMinSketch<T> implements CountMinSketch<T> {
     }
 
     @Override
-    public void clearFilter() {
+    public void clear() {
         countSketch = new int[this.d][this.w];
     }
 }

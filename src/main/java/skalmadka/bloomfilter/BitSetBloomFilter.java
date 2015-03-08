@@ -1,4 +1,4 @@
-package skalmadka.bloomfilter;
+package skalmadka.bloomFilter;
 
 import skalmadka.hash.MurmurHash;
 
@@ -8,9 +8,9 @@ import java.util.BitSet;
  * Created by Sunil Kalmadka
  */
 public class BitSetBloomFilter<T> implements BloomFilter<T>{
-    private final int m;     //Number of bits in BloomFilter
-    private final short k;    //Number of hash functions
-    private BitSet bitSet;
+    protected final int m;     //Number of bits in BloomFilter
+    protected final short k;    //Number of hash functions
+    protected BitSet bitSet;
 
     public BitSetBloomFilter(int expectedCount, double desiredFalsePositiveRate){
         final Double estimatedBitArraySize = estimateOptimalBitArraySize(expectedCount, desiredFalsePositiveRate);
@@ -60,13 +60,13 @@ public class BitSetBloomFilter<T> implements BloomFilter<T>{
     }
 
 
-    private Double estimateOptimalBitArraySize(int expectedCount, double desiredFalsePositiveRate){
+    protected Double estimateOptimalBitArraySize(int expectedCount, double desiredFalsePositiveRate){
         return Math.ceil( -1 * expectedCount * Math.log(desiredFalsePositiveRate)
                             /((Math.log(2)) * (Math.log(2)))
                         );
     }
 
-    private short estimateOptimalHashCount(int expectedCount, int bitArraySize){
+    protected short estimateOptimalHashCount(int expectedCount, int bitArraySize){
         return  (short) ((bitArraySize/expectedCount) * Math.log(2));
     }
 

@@ -7,10 +7,10 @@ import skalmadka.hash.MurmurHash;
  * Created by Sunil Kalmadka
  */
 public class RedisCountMinSketch<T> implements CountMinSketch<T> {
-    private final int w;
-    private final int d;
-    private Jedis jedis;
-    private final String countSketchName;
+    protected final int w;
+    protected final int d;
+    protected Jedis jedis;
+    protected final String countSketchName;
 
     public RedisCountMinSketch(final int width,final int hashCount,
                                final String redisHost, final short redisPort,
@@ -39,7 +39,9 @@ public class RedisCountMinSketch<T> implements CountMinSketch<T> {
     }
 
     @Override
-    public void updateCount(T obj, int count) {
+    public int updateCount(T obj, int count) {
+        int updatedFrequency = Integer.MAX_VALUE;
+
         final byte[] bytes = obj.toString().getBytes();
         final int hash1 = MurmurHash.hash32(bytes, bytes.length, 0);
         final int hash2 = MurmurHash.hash32(bytes, bytes.length, hash1);
@@ -47,8 +49,13 @@ public class RedisCountMinSketch<T> implements CountMinSketch<T> {
         int hashBit;
         for(int i=0;i<d;i++){
             hashBit = Math.abs((hash1 + i*hash2)%d);
-            jedis.hincrBy(String.format("%s%d", countSketchName, i), Integer.toString(hashBit), (long) count);
+            int freq = jedis.hincrBy(String.format("%s%d", countSketchName, i), Integer.toString(hashBit), (long) count).intValue();
+
+            if(updatedFrequency > freq){
+                updatedFrequency = freq;
+            }
         }
+        return updatedFrequency;
     }
 
     @Override
@@ -73,7 +80,7 @@ public class RedisCountMinSketch<T> implements CountMinSketch<T> {
     }
 
     @Override
-    public void clearFilter() {
+    public void clear() {
         for(int i=0; i<d; i++) {
             jedis.del(String.format("%s%d", countSketchName, i));
         }

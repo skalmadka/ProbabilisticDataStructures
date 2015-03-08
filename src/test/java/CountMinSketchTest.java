@@ -1,4 +1,3 @@
-import skalmadka.countMinSketch.ArrayCountMinSketch;
 import skalmadka.countMinSketch.CountMinSketch;
 import skalmadka.countMinSketch.RedisCountMinSketch;
 
@@ -23,7 +22,7 @@ public class CountMinSketchTest {
         System.out.println("123:"+cm.getFrequency("123"));
         System.out.println("aqwe:"+cm.getFrequency("aqwe"));
 
-        cm.clearFilter();
+        cm.clear();
     }
 }
 
